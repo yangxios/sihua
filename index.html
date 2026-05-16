@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>四画 — 以画见心</title>
+  <style>
+    /* ============================================
+       Base Reset & Variables
+    ============================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:          #ffffff;
+      --bg-secondary:#f5f5f7;
+      --text:        #1d1d1f;
+      --text-secondary: #6e6e73;
+      --text-tertiary:  #86868b;
+      --accent:      #0071e3;
+      --accent-hover:#0077ed;
+      --border:      #d2d2d7;
+      --radius:      12px;
+      --radius-lg:   18px;
+      --max-w:       1080px;
+      --font:        -apple-system, BlinkMacSystemFont, "SF Pro Display",
+                     "SF Pro Text", "Helvetica Neue", "PingFang SC",
+                     "Microsoft YaHei", sans-serif;
+      --transition:  0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 28px; }
+
+    /* ============================================
+       Nav
+    ============================================ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 52px;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      z-index: 1000;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+    nav .container {
+      height: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; letter-spacing: 2px; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      font-size: 13px; font-weight: 400; color: var(--text-secondary);
+      transition: color var(--transition);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; left: 0; bottom: -3px;
+      width: 0; height: 2px; background: var(--accent);
+      transition: width var(--transition);
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ============================================
+       Hero
+    ============================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 28px 80px;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,113,227,.06) 0%, transparent 70%),
+        linear-gradient(180deg, #fafbfc 0%, #fff 40%);
+    }
+    .hero-content { max-width: 800px; }
+    .hero-badge {
+      display: inline-block;
+      font-size: 13px; font-weight: 500; letter-spacing: 1px;
+      color: var(--accent);
+      background: rgba(0,113,227,.08);
+      padding: 6px 18px; border-radius: 100px;
+      margin-bottom: 28px;
+    }
+    .hero h1 {
+      font-size: clamp(52px, 10vw, 88px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .hero h1 .chinese { color: var(--accent); }
+    .hero p {
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 400;
+      color: var(--text-secondary);
+      max-width: 620px;
+      margin: 0 auto 40px;
+    }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 16px; font-weight: 500;
+      padding: 11px 30px; border-radius: 980px;
+      transition: all var(--transition);
+      cursor: pointer; border: none;
+    }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-hover); transform: scale(1.02); }
+    .btn-secondary {
+      background: transparent; color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .btn-secondary:hover {
+      background: rgba(0,113,227,.08);
+      transform: scale(1.02);
+    }
+
+    /* ============================================
+       Section
+    ============================================ */
+    section { padding: 100px 0; }
+    section:nth-child(even) { background: var(--bg-secondary); }
+
+    .section-label {
+      font-size: 13px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 600px;
+    }
+
+    /* ============================================
+       Four Cards — 画种
+    ============================================ */
+    .cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; margin-top: 56px; }
+    .card {
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      padding: 36px 24px 32px;
+      text-align: center;
+      transition: all var(--transition);
+      cursor: default;
+      border: 1px solid rgba(0,0,0,.04);
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0,0,0,.06);
+      border-color: rgba(0,113,227,.12);
+    }
+    .card-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+      font-size: 30px;
+    }
+    .card-icon.landscape { background: #e8f5e9; }
+    .card-icon.birdflower { background: #fff3e0; }
+    .card-icon.figure   { background: #e3f2fd; }
+    .card-icon.ink      { background: #f3e5f5; }
+    .card h3 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+    .card p {
+      font-size: 14px; color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       Gallery
+    ============================================ */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .gallery-item {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+      background: var(--bg-secondary);
+      transition: all var(--transition);
+      cursor: default;
+    }
+    .gallery-item:hover { transform: scale(1.012); }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .gallery-item:first-child { grid-column: 1 / -1; }
+    .gallery-item .overlay {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 20px 24px;
+      background: linear-gradient(transparent, rgba(0,0,0,.5));
+      color: #fff;
+      pointer-events: none;
+    }
+    .gallery-item .overlay h4 {
+      font-size: 17px; font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .gallery-item .overlay p {
+      font-size: 13px; font-weight: 400;
+      opacity: .85;
+    }
+
+    /* ============================================
+       Philosophy
+    ============================================ */
+    .philosophy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 48px;
+      align-items: center;
+    }
+    .philosophy-visual {
+      border-radius: var(--radius-lg);
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #f5f5f7, #e8e8ed);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 72px; color: var(--text-tertiary);
+    }
+    .philosophy-text h3 {
+      font-size: 28px; font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .philosophy-text p {
+      font-size: 16px; color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* ============================================
+       Footer
+    ============================================ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+    footer strong { color: var(--text); }
+
+    /* ============================================
+       Scroll reveal helpers
+    ============================================ */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: .1s; }
+    .reveal-d2 { transition-delay: .2s; }
+    .reveal-d3 { transition-delay: .3s; }
+    .reveal-d4 { transition-delay: .4s; }
+
+    /* ============================================
+       Responsive
+    ============================================ */
+    @media (max-width: 900px) {
+      .cards { grid-template-columns: repeat(2,1fr); }
+      .philosophy-grid { grid-template-columns: 1fr; }
+      .philosophy-visual { aspect-ratio: 3/2; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .cards { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item:first-child { grid-column: 1; aspect-ratio: 4/3; }
+      section { padding: 64px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== Nav ========== -->
+  <nav>
+    <div class="container">
+      <div class="nav-logo">四画</div>
+      <ul class="nav-links">
+        <li><a href="#categories">画种</a></li>
+        <li><a href="#gallery">画廊</a></li>
+        <li><a href="#philosophy">理念</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========== Hero ========== -->
+  <header class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">以画见心 · 以笔传意</div>
+      <h1>
+        <span class="chinese">四</span>画
+      </h1>
+      <p>
+        四画，不止于四种画风。我们在传统与现代之间寻找美的平衡，
+        让每一笔都成为内心的表达。
+      </p>
+      <div class="hero-actions">
+        <a href="#gallery" class="btn btn-primary">浏览作品 ↓</a>
+        <a href="#philosophy" class="btn btn-secondary">了解理念</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== 画种 ========== -->
+  <section id="categories">
+    <div class="container">
+      <div class="section-label">画种</div>
+      <h2 class="section-title">四种风格，<br>一种态度</h2>
+      <p class="section-desc">从山水到抽象，每一种画法都是对世界的独特解读。</p>
+
+      <div class="cards">
+        <div class="card reveal reveal-d1">
+          <div class="card-icon landscape">🏔</div>
+          <h3>山水</h3>
+          <p>以自然为师，在笔墨间勾勒山川的气韵与神采，感受天地之大美。</p>
+        </div>
+        <div class="card reveal reveal-d2">
+          <div class="card-icon birdflower">🌸</div>
+          <h3>花鸟</h3>
+          <p>一笔一画皆生机。捕捉花鸟虫鱼最灵动的瞬间，让画面充满生命力。</p>
+        </div>
+        <div class="card reveal reveal-d3">
+          <div class="card-icon figure">👤</div>
+          <h3>人物</h3>
+          <p>以线条诉说故事。通过神态与姿态，描绘人物内心的情感与温度。</p>
+        </div>
+        <div class="card reveal reveal-d4">
+          <div class="card-icon ink">🎨</div>
+          <h3>水墨</h3>
+          <p>墨分五色，意在笔先。用最纯粹的黑色，渲染出最丰富的意境。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Gallery ========== -->
+  <section id="gallery">
+    <div class="container">
+      <div class="section-label">画廊</div>
+      <h2 class="section-title">精选作品</h2>
+      <p class="section-desc">每一幅都是独一无二的心境呈现。</p>
+
+      <div class="gallery-grid">
+        <div class="gallery-item reveal">
+          <img src="images/van-gogh-starry-night.jpg" alt="星月夜 - 梵高" loading="lazy">
+          <div class="overlay">
+            <h4>星月夜 · The Starry Night</h4>
+            <p>文森特·梵高 — 1889 年 · 油画</p>
+          </div>
+        </div>
+        <div class="gallery-item reveal reveal-d2">
+          <img src="images/monet-haystacks.jpg" alt="干草堆 - 莫奈" loading="lazy">
+          <div class="overlay">
+            <h4>干草堆 · 夏末</h4>
+            <p>克劳德·莫奈 — 1891 年 · 油画</p>
+          </div>
+        </div>
+        <div class="gallery-item reveal reveal-d3">
+          <img src="images/monet-reflection.jpg" alt="睡莲 - 莫奈" loading="lazy">
+          <div class="overlay">
+            <h4>睡莲 · 云影</h4>
+            <p>克劳德·莫奈 — 1914-1926 年 · 油画</p>
+          </div>
+        </div>
+        <div class="gallery-item reveal reveal-d4">
+          <img src="images/van-gogh-irises.jpg" alt="鸢尾花 - 梵高" loading="lazy">
+          <div class="overlay">
+            <h4>鸢尾花 · Irises</h4>
+            <p>文森特·梵高 — 1889 年 · 油画</p>
+          </div>
+        </div>
+        <div class="gallery-item reveal reveal-d2">
+          <img src="images/van-gogh-starry-night.jpg" alt="星月夜 - 梵高" loading="lazy" style="object-position: 50% 30%;">
+          <div class="overlay">
+            <h4>罗纳河上的星夜</h4>
+            <p>文森特·梵高 — 1888 年 · 油画</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Philosophy ========== -->
+  <section id="philosophy">
+    <div class="container">
+      <div class="section-label">理念</div>
+      <h2 class="section-title">画中有话</h2>
+
+      <div class="philosophy-grid">
+        <div class="philosophy-visual reveal">
+          <img src="images/monet-reflection.jpg" alt="睡莲" style="width:100%;height:100%;object-fit:cover;border-radius:18px;">
+        </div>
+        <div class="philosophy-text reveal reveal-d2">
+          <h3>四画，不只是四。</h3>
+          <p>
+            「四画」中的「四」，既是四种基础画种的概括，
+            也暗合"四方"、"四时"之意——我们相信，
+            好的画作应当包容天地的广度与时间的深度。
+          </p>
+          <p style="margin-top:16px;">
+            无论是写意的洒脱还是工笔的细腻，
+            每一幅作品都在述说着一种对美的坚持。
+            拿起笔，你就是创作者。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Footer ========== -->
+  <footer>
+    <div class="container">
+      <p><strong>四画</strong> · 以画见心，以笔传意</p>
+      <p style="margin-top:4px;">© 2026 四画. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // ==================== Scroll Reveal ====================
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ==================== Smooth Nav Scroll ====================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(anchor.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
